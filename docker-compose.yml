@@ -1,0 +1,20 @@
+version: "2"
+services:
+  app:
+    container_name: w2v-rest-api-app
+    restart: always
+    build: .
+    ports:
+      - "4000:4000"
+    links:
+      - mongo
+  mongo:
+    container_name: w2v-mongo
+    image: mongo
+    # volumes:
+    #   - ./db:/data/db
+
+    # volumes:
+    #   - ./data/db:/data/db
+    ports:
+      - "27017:27017"
