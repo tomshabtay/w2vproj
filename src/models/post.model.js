@@ -11,7 +11,7 @@ let PostSchema = new mongoose.Schema({
   title: String,
   ups: { type: Number, default: 0 },
   // downvote: { type: Number, default: 0 },
-  timestamp : { type: Number, required: true, default: new Date().getTime() },
+  timestamp : { type: Number, required: true, default: new Date().getTime() / 1000 },
   score: { type: Number, index: true , default: 0  },
   last_score_update : {type: Date , index: true, default: new Date() }
 })

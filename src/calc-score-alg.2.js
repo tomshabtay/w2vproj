@@ -1,10 +1,11 @@
 let PostModel = require('./models/post.model')
+let config = require('./config')
 
 module.exports.calcPostScore = (points, date, postId,forceUpdate) => {
-    const GRAVITY = 1.2 // The higher the value the lower older post will be ranked
-    const UPDATE_EVERY_X_UPVOTES = 3
+    const GRAVITY = config.ALG_GRAVITY // The higher the value the lower older post will be ranked
+    const UPDATE_EVERY_X_UPVOTES = config.ALG_UPDATE_EVERY_X_VOTES
 
-    if(!forceUpdate && points % UPDATE_EVERY_X_UPVOTES == 0){
+    if(!forceUpdate && (points % UPDATE_EVERY_X_UPVOTES) != 0){
         console.log("Post don't need update")
         return
     }

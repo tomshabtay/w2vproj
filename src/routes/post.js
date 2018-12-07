@@ -18,27 +18,6 @@ router.get('/post/toplist', (req, res) => {
   })
 })
 
-// Upvote a post
-// GET localhost:4000/post/upvote/:id
-router.get('/post/upvote/:id', (req, res) => {
-  let postId = req.params.id
-  console.log(postId)
-  PostModel.findOneAndUpdate({ id: postId }, { $inc: { ups: 1 } }, { new: true }, (err, doc) => {
-    if (err) {
-      res.status(500).json(err)
-    }
-
-    // setTimeout(() => {
-    //   let points = doc.ups
-    //   let date = new Date(doc.timestamp * 1000)
-    //   let score = alg.calcPostScore(points, date, doc._id,false) //force update set to false
-    // }, 1000)
-
-    res.status(201).send(doc)
-  });
-
-})
-
 // Downvote a post
 // GET localhost:4000/post/downvote/:id
 router.get('/post/downvote/:id', (req, res) => {
@@ -47,30 +26,33 @@ router.get('/post/downvote/:id', (req, res) => {
     if (err) {
       res.status(500).json(err)
     }
-
-    setTimeout(() => {
-      let points = doc.ups
-      let date = new Date(doc.timestamp * 1000)
-      let score = alg.calcPostScore(points, date, doc._id,false) //force update set to false
-    }, 1000)
-
+    if (doc) {
+      setTimeout(() => {
+        let points = doc.ups
+        let date = new Date(doc.timestamp * 1000)
+        let score = alg.calcPostScore(points, date, doc._id, false) //force update set to false
+      }, 1000)
+    }
     res.status(201).send(doc)
   });
 
 })
 
-router.get('/post/upvote2/:id', (req, res) => {
+// Upvote a post
+// GET localhost:4000/post/upvote/:id
+router.get('/post/upvote/:id', (req, res) => {
   let postId = req.params.id
   PostModel.findOneAndUpdate({ _id: postId }, { $inc: { ups: 1 } }, { new: true }, (err, doc) => {
     if (err) {
       res.status(500).json(err)
     }
-
-    setTimeout(() => {
-      let points = doc.ups
-      let date = new Date(doc.timestamp * 1000)
-      let score = alg.calcPostScore(points, date, doc._id,false) //force update set to false
-    }, 1000)
+    if (doc) {
+      setTimeout(() => {
+        let points = doc.ups
+        let date = new Date(doc.timestamp * 1000)
+        let score = alg.calcPostScore(points, date, doc._id, false) //force update set to false
+      }, 1000)
+    }
 
     res.status(201).send(doc)
   });
@@ -83,6 +65,7 @@ router.post('/post', (req, res) => {
   let model = new PostModel(req.body)
   model.save()
     .then(doc => {
+      console.log(doc)
       if (!doc || doc.length === 0) {
         return res.status(500).send(doc)
       }

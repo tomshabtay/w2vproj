@@ -5,6 +5,7 @@ let postRoute = require('./routes/post')
 let bodyParser = require('body-parser')
 
 let jobs = require('./jobs.js')
+let conifg = require('./config')
 
 app.use(bodyParser.json())
 
@@ -28,6 +29,9 @@ app.listen(PORT, () => console.info(`Server has started on ${PORT}`))
 jobs.updateScoresJob();
 jobs.updateTopListJob();
 jobs.initTopListJob();
-// jobs.initPostsJob();
+if(conifg.add_stub_post_to_database) {
+  jobs.addStubPosts();
+}
+
 
 

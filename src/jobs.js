@@ -14,7 +14,7 @@ module.exports.updateScoresJob = () => {
             });
         });
 
-    }, 5000)
+    }, 20*1000)
 }
 
 module.exports.updateTopListJob = () => {
@@ -33,7 +33,7 @@ module.exports.updateTopListJob = () => {
             })
 
         });
-    }, 10000)
+    }, 20*1000)
 }
 
 module.exports.initTopListJob = () => {
@@ -51,7 +51,7 @@ module.exports.initTopListJob = () => {
         })
 }
 
-module.exports.initPostsJob = () => {
+module.exports.addStubPosts = () => {
     var arr = postStub.posts
 
     PostModel.insertMany(arr)
