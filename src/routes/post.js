@@ -5,7 +5,7 @@ let router = express.Router()
 let alg = require('../calc-score-alg.2')
 
 // Serve the top list
-// POST localhost:3000/post/toplist
+// POST localhost:4000/post/toplist
 router.get('/post/toplist', (req, res) => {
   PostTopListModel.find({}, ['body'], { limit: 1 }, function (err, posts) {
     console.log(posts.body)
@@ -19,19 +19,20 @@ router.get('/post/toplist', (req, res) => {
 })
 
 // Upvote a post
-// GET localhost:3000/post/upvote/:id
+// GET localhost:4000/post/upvote/:id
 router.get('/post/upvote/:id', (req, res) => {
   let postId = req.params.id
-  PostModel.findOneAndUpdate({ _id: postId }, { $inc: { ups: 1 } }, { new: true }, (err, doc) => {
+  console.log(postId)
+  PostModel.findOneAndUpdate({ id: postId }, { $inc: { ups: 1 } }, { new: true }, (err, doc) => {
     if (err) {
       res.status(500).json(err)
     }
 
-    setTimeout(() => {
-      let points = doc.ups
-      let date = new Date(doc.timestamp * 1000)
-      let score = alg.calcPostScore(points, date, doc._id,false) //force update set to false
-    }, 1000)
+    // setTimeout(() => {
+    //   let points = doc.ups
+    //   let date = new Date(doc.timestamp * 1000)
+    //   let score = alg.calcPostScore(points, date, doc._id,false) //force update set to false
+    // }, 1000)
 
     res.status(201).send(doc)
   });
@@ -39,7 +40,7 @@ router.get('/post/upvote/:id', (req, res) => {
 })
 
 // Downvote a post
-// GET localhost:3000/post/downvote/:id
+// GET localhost:4000/post/downvote/:id
 router.get('/post/downvote/:id', (req, res) => {
   let postId = req.params.id
   PostModel.findOneAndUpdate({ _id: postId }, { $inc: { ups: -1 } }, { new: true }, (err, doc) => {
@@ -58,8 +59,26 @@ router.get('/post/downvote/:id', (req, res) => {
 
 })
 
+router.get('/post/upvote2/:id', (req, res) => {
+  let postId = req.params.id
+  PostModel.findOneAndUpdate({ _id: postId }, { $inc: { ups: 1 } }, { new: true }, (err, doc) => {
+    if (err) {
+      res.status(500).json(err)
+    }
+
+    setTimeout(() => {
+      let points = doc.ups
+      let date = new Date(doc.timestamp * 1000)
+      let score = alg.calcPostScore(points, date, doc._id,false) //force update set to false
+    }, 1000)
+
+    res.status(201).send(doc)
+  });
+
+})
+
 // Create a new post
-// POST localhost:3000/post
+// POST localhost:4000/post
 router.post('/post', (req, res) => {
   let model = new PostModel(req.body)
   model.save()
@@ -76,10 +95,10 @@ router.post('/post', (req, res) => {
 })
 
 // Update a post
-// PUT localhost:3000/post
+// PUT localhost:4000/post
 router.put('/post', (req, res) => {
   if (!req.query.id) {
-    return res.status(400).send('Missing URL parameter: email')
+    return res.status(400).send('Missing URL parameter: id')
   }
 
   PostModel.findOneAndUpdate({
@@ -96,7 +115,7 @@ router.put('/post', (req, res) => {
 })
 
 // Delete a post
-// DELETE localhost:3000/post
+// DELETE localhost:4000/post
 router.delete('/post', (req, res) => {
   if (!req.query.id) {
     return res.status(400).send('Missing URL parameter: id')

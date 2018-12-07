@@ -28,6 +28,6 @@ app.listen(PORT, () => console.info(`Server has started on ${PORT}`))
 jobs.updateScoresJob();
 jobs.updateTopListJob();
 jobs.initTopListJob();
-jobs.initPostsJob();
+// jobs.initPostsJob();
 
 

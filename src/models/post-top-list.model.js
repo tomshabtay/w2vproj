@@ -1,6 +1,12 @@
 let mongoose = require('mongoose')
+let conifg = require('../config')
 
-mongoose.connect(`mongodb://mongo:27017/w2v`)
+if(conifg.DEV_MODE) {
+    mongoose.connect(conifg.MONGO_URL_DEV)
+} else {
+    mongoose.connect(conifg.MONGO_URL)
+}
+
 
 let PostTopListSchema = new mongoose.Schema({
     body: Object
