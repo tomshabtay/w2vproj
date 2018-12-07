@@ -9,12 +9,7 @@ services:
     links:
       - mongo
   mongo:
-    container_name: w2v-mongo
+    container_name: mongo
     image: mongo
-    # volumes:
-    #   - ./db:/data/db
-
-    # volumes:
-    #   - ./data/db:/data/db
     ports:
       - "27017:27017"

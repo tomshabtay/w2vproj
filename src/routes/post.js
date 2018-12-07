@@ -131,6 +131,38 @@ router.get('/post/topdev', (req, res) => {
 
 })
 
+
+
+
+router.get('/post/adddev', (req, res) => {
+  var posts = []
+  for (let i = 0; i < 25; i++) {
+    var post = new Object();
+    post.title = "test"
+    post.ups = Math.floor(Math.random() * (1000 - 50) + 50)
+    post.timestamp = parseInt(
+      new Date(2018,Math.floor(Math.random() * (10 - 1) + 1),1).getTime() / 1000)
+    post.score = Math.floor(Math.random() * (1000 - 50) + 50)
+    posts.push(post)
+    console.log(post)
+
+  }
+
+  PostModel.insertMany(posts)
+    .then((result) => {
+      console.log("result ", result);
+      res.status(201).send("ok") 
+    })
+    .catch(err => {
+      console.error("error ", err);
+      res.status(201).send("failed")
+
+    });
+
+})
+
+
+
 // router.post('/post/init', (req, res) => {
 //   if (!req.body) {
 //     return res.status(400).send('Request body is missing')
