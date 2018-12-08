@@ -16,7 +16,7 @@ module.exports.calcPostScore = (points, date, postId,forceUpdate) => {
 
     // calc score
     let score = (points - 1) / Math.pow((diff + 2), GRAVITY)
-    score = Math.round((score * 100))
+    score = Math.round((score * 10000))
     // return score
     PostModel.findOneAndUpdate({ _id: postId }, { $set: { score: score, last_score_update: new Date()} }, { new: true }, (err, doc) => {
         console.log("Score updated: " + postId + " score = " + score)

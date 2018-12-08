@@ -3,6 +3,7 @@ let PostTopListModel = require('../models/post-top-list.model')
 let express = require('express')
 let router = express.Router()
 let alg = require('../calc-score-alg.2')
+let postStub = require("../stub/post.stub")
 
 // Serve the top list
 // POST localhost:4000/post/toplist
@@ -116,7 +117,7 @@ router.delete('/post', (req, res) => {
 })
 
 // getting the top list (for development only)
-router.get('/post/topdev', (req, res) => {
+router.get('/dev/post/toplist', (req, res) => {
   PostModel.find({}, ['title', 'score', 'timestamp', 'ups'], { limit: 100, sort: { score: -1 } }, function (err, posts) {
     if (err) {
       res.status(500).json(err)
@@ -130,11 +131,16 @@ router.get('/post/topdev', (req, res) => {
   });
 
 })
+// removing all posts
+router.get('/dev/post/removeall', (req, res) => {
+  PostModel.remove({}, function (err, posts){
+    res.status(201).send("ok")
+  })
+})
 
 
-
-
-router.get('/post/adddev', (req, res) => {
+// adding random posts
+router.get('/dev/post/addposts', (req, res) => {
   var posts = []
   for (let i = 0; i < 25; i++) {
     var post = new Object();
@@ -149,6 +155,22 @@ router.get('/post/adddev', (req, res) => {
   }
 
   PostModel.insertMany(posts)
+    .then((result) => {
+      console.log("result ", result);
+      res.status(201).send("ok") 
+    })
+    .catch(err => {
+      console.error("error ", err);
+      res.status(201).send("failed")
+
+    });
+
+})
+
+// adding random posts
+router.get('/dev/post/addredditposts', (req, res) => {
+
+  PostModel.insertMany(postStub.posts)
     .then((result) => {
       console.log("result ", result);
       res.status(201).send("ok") 

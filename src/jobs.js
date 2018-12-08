@@ -1,11 +1,10 @@
 let PostModel = require('./models/post.model')
 let PostTopListModel = require('./models/post-top-list.model')
 let alg = require('./calc-score-alg.2')
-let postStub = require("./stub/post.stub")
 
 module.exports.updateScoresJob = () => {
     setInterval(() => {
-        PostModel.find({}, ['title', 'score', 'timestamp', 'ups', 'last_score_update'], { limit: 3, sort: { last_score_update: 1 } }, function (err, posts) {
+        PostModel.find({}, ['title', 'score', 'timestamp', 'ups', 'last_score_update'], { limit: 20, sort: { last_score_update: 1 } }, function (err, posts) {
 
             posts.forEach(function (post) {
                 console.log(post.last_score_update)
@@ -14,7 +13,7 @@ module.exports.updateScoresJob = () => {
             });
         });
 
-    }, 20*1000)
+    }, 4 * 1000)
 }
 
 module.exports.updateTopListJob = () => {
@@ -33,22 +32,29 @@ module.exports.updateTopListJob = () => {
             })
 
         });
-    }, 20*1000)
+    }, 10 * 1000)
 }
 
 module.exports.initTopListJob = () => {
-    let model = new PostTopListModel({ body: "" })
-    model.save()
-        .then(doc => {
-            if (!doc || doc.length === 0) {
-                return res.status(500).send(doc)
-            }
+    PostTopListModel.remove({}, function (err, posts) {
+        if(err) {
+            console.log(err)
+            return 
+        }
 
-            res.status(201).send(doc)
-        })
-        .catch(err => {
-            res.status(500).json(err)
-        })
+        let model = new PostTopListModel({ body: "" })
+        model.save()
+            .then(doc => {
+                if (!doc || doc.length === 0) {
+                    return res.status(500).send(doc)
+                }
+
+                res.status(201).send(doc)
+            })
+            .catch(err => {
+                res.status(500).json(err)
+            })
+    })
 }
 
 module.exports.addStubPosts = () => {
@@ -57,10 +63,10 @@ module.exports.addStubPosts = () => {
     PostModel.insertMany(arr)
         .then((result) => {
             console.log("result ", result);
-            
+
         })
         .catch(err => {
             console.error("error ", err);
-            
+
         });
 }
